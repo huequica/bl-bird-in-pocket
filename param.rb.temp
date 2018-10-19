@@ -10,5 +10,8 @@ POCKET_ACCESS_TOKEN=
     config.access_token_secret =
 end
 
+#画像ファイルを保存するディレクトリ(フルパス)
+$save_dir = 
+
 #Twitterのアドレスを見て保存した先archiveにするか消し去るか(デフォはarchive)
 $action_set = 'archive'
