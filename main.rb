@@ -3,6 +3,7 @@ require 'json'
 require 'net/https'
 require 'twitter'
 require 'open-uri'
+
 #auth認証情報の読み込み
 require './param'
 
@@ -99,10 +100,10 @@ while loop_flag do
                 puts cut_url = article['given_url'].sub!(/.*\/status\//, "")
                 begin
                     tweet_data = @client.status(cut_url)
-
+                    
                     tweet_imgs = tweet_data.media.map{ |img| img.media_url.to_s }
                     tweet_imgs.each do |media_url|
-                        path = "/Users/reno.89m/Script_img/#{File.basename(media_url)}"
+                        path = "#{$save_dir}/#{File.basename(media_url)}"
                         File.open(path, 'wb') do |f|
                             f.write open(media_url).read
                         end
