@@ -1,0 +1,14 @@
+#pocket api
+CONSUMER_KEY =
+POCKET_ACCESS_TOKEN=
+
+#twitter api
+@client = Twitter::REST::Client.new do |config|
+    config.consumer_key =
+    config.consumer_secret =
+    config.access_token =
+    config.access_token_secret =
+end
+
+#Twitterのアドレスを見て保存した先archiveにするか消し去るか(デフォはarchive)
+$action_set = 'archive'
