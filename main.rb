@@ -64,7 +64,7 @@ while loop_flag do
     else
         #2回目以降の取得処理
         if twitter_job_count == 0
-            puts "TwitterのURLはもう無いと思う"
+            puts 'TwitterのURLはもうありません'
             break
         end
 
@@ -79,7 +79,7 @@ while loop_flag do
 
         res = http.request(req)
 
-        raise "error: cannot get response." unless res.is_a?(Net::HTTPOK)
+        raise 'error: cannot get response.' unless res.is_a?(Net::HTTPOK)
         twitter_job_count = 0
     end
 
@@ -96,8 +96,8 @@ while loop_flag do
             puts "#{loop_counter}回目 : #{article['excerpt']}"
 
             if article['given_url'] =~ /.*twitter.com.*/i then
-                puts "Twitterだと思う"
-                puts cut_url = article['given_url'].sub!(/.*\/status\//, "")
+                puts 'Twitterだと思う'
+                puts  cut_url = article['given_url'].sub!(/.*\/status\//, '')
                 begin
                     tweet_data = @client.status(cut_url)
                     
@@ -111,12 +111,12 @@ while loop_flag do
     
                     archive_item(article['item_id'])    #archiveするなり消すなりコロ助なり
     
-                    puts "規制回避で待ち中"
+                    puts '規制回避中'
                     sleep(1)
                     print "\n"
                     twitter_job_count += 1
                 rescue => Twitter::Error
-                    puts "取得において問題が出た、多分消えてるか凍結"
+                    puts 'ツイートが消えてるか凍結かなにかで取得ませんでした'
                     before_set = $action_set
                     $action_set = 'delete'
                     archive_item(article['item_id'])
@@ -132,4 +132,4 @@ while loop_flag do
     end
 end
 
-puts "多分終わりました"
+puts '終わりました'
