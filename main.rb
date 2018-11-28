@@ -90,6 +90,8 @@ while loop_flag do
         break
     else
         res_json['list'].each do |id, article|
+            tweet_data = nil
+
             loop_counter += 1
             since_id = article['item_id']
 
@@ -98,8 +100,18 @@ while loop_flag do
             if article['given_url'] =~ /.*twitter.com.*/i then
                 puts 'Twitterだと思う'
                 puts  cut_url = article['given_url'].sub!(/.*\/status\//, '')
+
                 begin
                     tweet_data = @client.status(cut_url)
+                    rescue Twitter::Error::NotFound #Twitterのツイートが消えてて取得しくじった時の処理
+                        puts '** Twitterのリンクが消えてます **'
+
+                        before_set = $action_set
+                        $action_set = 'delete'
+                        archive_item(article['item_id'])
+                        $action_set = before_set
+                        next
+                    end
                     
                     tweet_imgs = tweet_data.media.map{ |img| img.media_url.to_s }
                     tweet_imgs.each do |media_url|
@@ -110,23 +122,14 @@ while loop_flag do
                     end
     
                     archive_item(article['item_id'])    #archiveするなり消すなりコロ助なり
-    
+        
                     puts '規制回避中'
                     sleep(1)
                     print "\n"
                     twitter_job_count += 1
-                rescue => Twitter::Error
-                    puts 'ツイートが消えてるか凍結かなにかで取得ませんでした'
-                    before_set = $action_set
-                    $action_set = 'delete'
-                    archive_item(article['item_id'])
-                    $action_set = before_set
-                end
-                
-
             else
-                puts "Twitterじゃない"
-                print "\n"
+                puts 'Twitterじゃない'
+                puts ''
             end
         end
     end
